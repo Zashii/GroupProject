@@ -40,21 +40,22 @@
 
 
 $(document).ready(function(){
-  for(var i = 1; i<10; i++){
+  
+for(var i = 1; i<10; i++){
 
 queryURL = "https://pokeapi.co/api/v2/pokemon/"+i+"/";
+
 
 $.ajax({
 url: queryURL,
 method: "GET"
 }).then(function(response) {
   console.log(response);
-  $('#myPokemonTable').append("<tr></tr>")
-  $('#myPokemonTable').append("<td>"+response.id+"</td>");
-  $('#myPokemonTable').append("<td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td>")
-  $('#myPokemonTable').append("<td>"+response.name+"</td>");
-  $('#myPokemonTable').append("<td>"+response.types[0].type.name+"</td>");
-  $('#myPokemonTable').append("<td>"+response.types[1].type.name+"</td>");
+  $('#myPokemonTable').append("<tr style='border:solid'><td>"+response.id+"</td><td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
+  //$('#myPokemonTable').append("<td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_shiny + "\"></td>")
+  //$('#myPokemonTable').append("<td>"+response.name+"</td>");
+  //$('#myPokemonTable').append("<td>"+response.types[0].type.name+"</td>");
+  //$('#myPokemonTable').append("<td>"+response.types[1].type.name+"</td>");
 
 });
 
