@@ -14,7 +14,7 @@
 </head>
 
     <body>
-        <table style="width:100% ; border:solid">
+        <table  id="myPokemonTable"style="width:100% ; border:solid">
             <tr  style="border:solid">
               <th>#</th>
               <th>Picture</th> 
@@ -23,7 +23,7 @@
               <th>Type 2</th>
             </tr>
             <tr>
-              <td>30</td>
+              <td>40</td>
               <td>Picture Here</td> 
               <td>Pikachu</td>
               <td>Electric</td>
@@ -31,5 +31,36 @@
             </tr>
         </table>    
     </body>
+<div id="pokemonTableWindow">
+
+</div>
+<script>
+
+
+
+
+$(document).ready(function(){
+  for(var i = 1; i<10; i++){
+
+queryURL = "https://pokeapi.co/api/v2/pokemon/"+i+"/";
+
+$.ajax({
+url: queryURL,
+method: "GET"
+}).then(function(response) {
+  console.log(response);
+  $('#myPokemonTable').append("<tr></tr>")
+  $('#myPokemonTable').append("<td>"+response.id+"</td>");
+  $('#myPokemonTable').append("<td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td>")
+  $('#myPokemonTable').append("<td>"+response.name+"</td>");
+  $('#myPokemonTable').append("<td>"+response.types[0].type.name+"</td>");
+  $('#myPokemonTable').append("<td>"+response.types[1].type.name+"</td>");
+
+});
+
+}
+});
+
+</script>
 
 </html>
