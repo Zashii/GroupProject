@@ -35,6 +35,11 @@
             margin-left:10%;
 
         }
+        #theIMG2 {
+            width: 75px;
+            margin-left:5%;
+
+        }
 
         @media only screen and (max-width: 991px) {
              #theIMG {
@@ -67,7 +72,7 @@
             }).then(function(response) {
                 
                 $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
-            
+                $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
             });
 
 
@@ -111,11 +116,12 @@
                         <div class="col-lg-7 col-md-7 col-xs-7 col-sm-7" id="boxWrapper">
                             <div class="row" style="height: 100px; margin-top: 20px">
                                 <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black" id="pokemonName">
-                                  
+                                        
                                         <!-- <span style="background-color: red; height: 43px; width: 534px; position: absolute; right: 12.8px; border-radius: 3px 3px 0px 0px; border-bottom: 5px solid rgb(254,153,171);"> -->
                                             <div style="padding-right: 100%; background-color:red;">
-                                                <img src="assets/images/pokeball2.png" style="width: 30px; float;background-color: red; border-radius: 3px;">
+                                                <img src="assets/images/pokeball2.png" style="margin-left: 5px; width: 30px; float;background-color: red; border-radius: 3px;">
                                             </div>
+                                            Pokemon Name
                                             <!-- </span> -->
 
                                 </div>
@@ -125,9 +131,7 @@
                                         <!-- <span style="background-color: red; height: 15px; width: 88.4px; position: absolute; right: 0px; border-radius: 2px 2px 0px 0px; border-bottom: 3px solid rgb(254,153,171)"> -->
 
                                         <!-- </span> -->
-                                        hello
-
-                                        hello
+                                        
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="height: 80px; margin: 10px; width: 100%">
 
