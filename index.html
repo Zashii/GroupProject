@@ -12,12 +12,18 @@
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Cormorant+Unicase" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <link href="assets/fonts/font.ttf"> 
     <style>
 
         body {
           /* font-family: 'Cormorant Unicase', serif; */
           font-weight: strong;
+          font-family: PokemonFont;
+        }
+
+        @font-face {
+        font-family: PokemonFont;
+        src: url("assets/fonts/font.ttf");
         }
 
         .mainWindow {
@@ -76,16 +82,99 @@
     <script>
 
         $(document).ready(function(){
-
+            var name;
+            var genus;            
             queryURL = "https://pokeapi.co/api/v2/pokemon/1/";
+
+//http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=Hello, world!
+ 	
 
             $.ajax({
             url: queryURL,
             method: "GET"
             }).then(function(response) {
                 
-                $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
-                $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                    $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                    $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                    name = response.name;
+                    $("#pokemonName").html(response.name);
+                    $("#type1").html(response.types[0].type.name);
+
+                    if (response.types.length==2){
+                        $("#type2").html(response.types[1].type.name);
+                    } else {
+                            $("#type2").html("");
+                    }
+                    $("#ability1").html(response.abilities[0].ability.name);
+
+                    if (response.abilities.length==2){
+                        $("#ability2").html(response.abilities[1].ability.name);
+                    } else {
+                        $("#ability2").html("");
+                    }
+                    $("#height").html(response.height);
+                    $("#weight").html(response.weight);
+            });
+
+            var queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/1";
+                $.ajax({
+                url: queryLink2,
+                method: "GET"
+
+                }).then(function(response) {
+                    genus = response.genera[2].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                    audio.play(); 
+                    $("#description").html("<p style=\"text-align:center; margin: 0 auto\">" + response.flavor_text_entries[1].flavor_text + "</p>");
+                    $("#genus").html(response.genera[2].genus);
+            });
+
+            $("#Search").on("click", function(){
+                
+                var queryLink = "https://pokeapi.co/api/v2/pokemon/" + $("#Searchbox").val();
+
+                $.ajax({
+                url: queryLink,
+                method: "GET"
+
+                }).then(function(response) {
+                    
+                    $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                    $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                    $("#pokemonName").html(response.name);
+                    name = response.name;
+                    $("#type1").html(response.types[0].type.name);
+
+                    if (response.types.length==2){
+
+                        $("#type2").html(response.types[1].type.name);
+                    } else {
+                        $("#type2").html("");
+                    }
+
+                    $("#ability1").html(response.abilities[0].ability.name);
+
+                    if (response.abilities.length==2){
+                        $("#ability2").html(response.abilities[1].ability.name);
+                    } else {
+                        $("#ability2").html("");
+                    }
+                });
+
+                var queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + $("#Searchbox").val();
+                $.ajax({
+                url: queryLink2,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    genus = response.genera[2].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html(response.flavor_text_entries[1].flavor_text);
+                    $("#genus").html(response.genera[2].genus);
+                });
             });
 
 
@@ -100,10 +189,10 @@
             <div class="row">
                 
                 <select>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="volvo">Evolution Forms</option>
+                    <option id="evo1" value="evo1">Saab</option>
+                    <option id="evo2" value="evo2">Mercedes</option>
+                    <option id="evo3" value="evo3">Audi</option>
                   </select> 
                   <select>
                     <option value="volvo">Volvo</option>
@@ -111,11 +200,13 @@
                     <option value="mercedes">Mercedes</option>
                     <option value="audi">Audi</option>
                   </select> 
+                  <input id="Searchbox"></input>
+                  <button id="Search">Search for Pokemon (ID or Name)</button>
             </div>
             <div class="container mainWindow2" style="height: 530px; border: 1px solid black;">
                 <div class="row" id="topBar" style="background-color:red; border-bottom: 5px solid black;">
                     
-                        <h3 style="color:white; padding-left:10px; margin: 2px;"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> INFO </h3>
+                        <h3 style="color:white; padding-left:10px; margin: 2px;"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>INFO </h3>
                         <!-- <span id="menuShadow" style="background-color: darkgrey; height: 23px; width: 958px; border-bottom: 5px solid rgb(205,205,205)"> -->
 
                         </span>
@@ -128,13 +219,14 @@
                         
                         <div class="col-lg-7 col-md-7 col-xs-7 col-sm-7" id="boxWrapper">
                             <div class="row" style="height: 100px; margin-top: 20px">
-                                <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black" id="pokemonName">
+                                <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black">
                                         
                                         <!-- <span style="background-color: red; height: 43px; width: 534px; position: absolute; right: 12.8px; border-radius: 3px 3px 0px 0px; border-bottom: 5px solid rgb(254,153,171);"> -->
-                                            <div style="padding-right: 100%; background-color:red;">
-                                                <img src="assets/images/pokeball2.png" style="margin-left: 5px; width: 30px; float;background-color: red; border-radius: 3px;">
-                                            </div>
-                                            Pokemon Name
+                                            <p style="padding-right: 50%; background-color:red;">
+                                                <img src="assets/images/pokeball2.png" style="margin-left: 5px; width: 30px ;background-color: red; border-radius: 3px;"> 
+                                                <span id="pokemonName" style="text-transform:capitalize">Hello </span>
+                                            </p>
+                                            <span id="genus" style="margin-left:5%">Pokemon Name</span>
                                             <!-- </span> -->
 
                                 </div>
@@ -148,26 +240,33 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="height: 80px; margin: 10px; width: 100%">
 
-                                    <div id="type1" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px">Type 1</p>
+                                    <div class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
+                                          <p style="margin-top:9px" id="type1">Type 1</p>
                                     </div>
-                                    <div id="type2" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px">Type 2</p>
+                                    <div class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
+                                          <p style="margin-top:9px" id="ability1">Ability 1</p>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="background-color: white; height: 80px; margin: 10px; width: 100%">
                                        
-                                    <div id="ability1" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                         Ability 1
+                                    <div class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
+                                        <p style="margin-top:9px" id="type2">Type2</p>
                                     </div>
-                                    <div id="ability2" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                         Ability 2
+                                    <div class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
+                                        <p style="margin-top:9px" id="ability2">Ability 2</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="height: 92px; margin-right: 1px">
                                  <div id="heightWeight" class="col-lg-8 offset-lg-4 col-md-8 offset-md-4 col-xs-8 offset-xs-4 col-sm-8 offset-sm-4" style="border: 3px solid black; background-color:white; border-radius: 5px">
-
+                                        <div style="height:50%; margin-bottom: -5%; margin-left: -5%">
+                                        <!-- <p style=" margin-left: 10%">HT <span style="margin-left:30%">150</span></p>     -->
+                                            <p style="margin-top:10px; margin-left: 10%">HT <span id="height" style="margin-left:35%">150</span></p>    
+                                        </div>  
+                                        <div style="height:50%; width: 115%; margin-left: -6%; border-top: 4px dotted grey">
+                                            <p style="margin-top:10px; margin-left: 10%">WT <span id="weight" style="margin-left:30%">150</span></p>    
+                                        </div>
+                                        
                                  </div>
                             </div>
                         </div>          
