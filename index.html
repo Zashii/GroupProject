@@ -159,6 +159,20 @@
                     } else {
                         $("#ability2").html("");
                     }
+
+                
+                            
+                            // $.ajax({
+                            // url: queryLinkEvo,
+                            // method: "GET"
+
+                            // }).then(function(response) {
+                               
+                            //     $("#evo1").text(response.chain.species.name);
+    
+                            //     $("#evo2").text(response.chain.evolves_to[0].species.name);
+                            // });
+
                 });
 
                 var queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + $("#Searchbox").val();
@@ -174,9 +188,120 @@
 
                     $("#description").html(response.flavor_text_entries[1].flavor_text);
                     $("#genus").html(response.genera[2].genus);
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").text(response.chain.evolves_to[0].species.name);
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").text(response.chain.evolves_to[0].evolves_to[0].species.name);
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+
                 });
             });
 
+            $("#evoDropdown").change(function(){
+                
+                var currentEvo = $('#evoDropdown').find(":selected").text();
+                var queryLink3 = "https://pokeapi.co/api/v2/pokemon/" + currentEvo.toLowerCase();
+
+                $.ajax({
+                url: queryLink3,
+                method: "GET"
+
+                }).then(function(response) {
+            
+                        
+                        $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                        $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                        $("#pokemonName").html(response.name);
+
+                        name = response.name;
+
+                        $("#type1").html(response.types[0].type.name);
+
+                        if (response.types.length==2){
+
+                            $("#type2").html(response.types[1].type.name);
+                        } else {
+                            $("#type2").html("");
+                        }
+
+                        $("#ability1").html(response.abilities[0].ability.name);
+
+                        if (response.abilities.length==2){
+                            $("#ability2").html(response.abilities[1].ability.name);
+                        } else {
+                            $("#ability2").html("");
+                        }
+                });
+
+                var queryLink4 = "https://pokeapi.co/api/v2/pokemon-species/" + currentEvo.toLowerCase();
+                $.ajax({
+                url: queryLink4,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    genus = response.genera[2].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html(response.flavor_text_entries[1].flavor_text);
+                    $("#genus").html(response.genera[2].genus);
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").text(response.chain.evolves_to[0].species.name);
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").text(response.chain.evolves_to[0].evolves_to[0].species.name);
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+
+                });
+                // var queryLink4 = "https://pokeapi.co/api/v2/pokemon-species/" + currentEvo.toLowerCase;
+                //         $.ajax({
+                //         url: queryLink4,
+                //         method: "GET"
+
+                //         }).then(function(response) {
+
+                //             genus = response.genera[2].genus;
+                //             var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                //             audio.play(); 
+
+                //             $("#description").html(response.flavor_text_entries[1].flavor_text);
+                //             $("#genus").html(response.genera[2].genus);
+                // });
+            }); 
 
         });
 
@@ -188,11 +313,11 @@
          <div class="container mainWindow">
             <div class="row">
                 
-                <select>
+                <select id="evoDropdown">
                     <option value="volvo">Evolution Forms</option>
-                    <option id="evo1" value="evo1">Saab</option>
-                    <option id="evo2" value="evo2">Mercedes</option>
-                    <option id="evo3" value="evo3">Audi</option>
+                    <option id="evo1" value="evo1" style="text-transform:capitalize">Ivysaur</option>
+                    <option id="evo2" value="evo2" style="text-transform:capitalize">Venusaur</option>
+                    <option id="evo3" value="evo3" style="text-transform:capitalize">Audi</option>
                   </select> 
                   <select>
                     <option value="volvo">Volvo</option>
