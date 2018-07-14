@@ -12,12 +12,17 @@
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Cormorant+Unicase" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+    <link href="assets/fonts/font.ttf"> 
     <style>
 
         body {
-          /* font-family: 'Cormorant Unicase', serif; */
           font-weight: strong;
+          font-family: PokemonFont;
+        }
+
+        @font-face {
+        font-family: PokemonFont;
+        src: url("assets/fonts/font.ttf");
         }
 
         .mainWindow {
@@ -35,6 +40,27 @@
             margin-left:10%;
 
         }
+        #theIMG2 {
+            width: 75px;
+            margin-left:5%;
+
+        }
+
+        p {
+            font-size: 1em;
+        }
+
+        #evo1 {
+            text-transform: capitalize;
+        }
+
+        #evo2 {
+            text-transform: capitalize;
+        }
+
+        #evo3 {
+            text-transform: capitalize;
+        }
 
         @media only screen and (max-width: 991px) {
              #theIMG {
@@ -45,12 +71,143 @@
             } 
         }
 
-        @media only screen and (max-width: 691px) {
+        @media only screen and (max-width: 768px) {
              #theIMG {
                /* margin-right: -200px; */
                margin-left:10%;
                margin-top:35%;
                width:90%;
+            } 
+
+            p {
+                font-size: 0.6em;
+            }
+
+            #a1 {
+                width:150%;
+            }
+
+            #t1 {
+                width:150%;
+            }
+
+            #a2 {
+                width:150%;
+            }
+
+            #t2 {
+                width:150%;
+            }
+
+        }
+
+        @media only screen and (max-width: 575.5px) {
+            #a1 {
+                width:40%;
+                margin: 0px;
+            }
+
+            #t1 {
+                width:40%;
+                margin: 0px;
+            }
+
+            #a2 {
+                width:40%;
+                margin: 0px;
+            }
+
+            #t2 {
+                width:40%;
+                margin: 0px;
+            }
+
+            #shiny {
+               display:none;
+            } 
+
+        }
+
+        @media only screen and (max-width: 400px){
+            #genus {
+                font-size: 0.8em;
+            } 
+            #ability1 {
+                font-size: 0.7em;
+            }
+            #ability2 {
+                font-size: 0.7em;
+            }
+            #type1 {
+                font-size: 0.7em;
+            }
+            #type2 {
+                font-size: 0.7em;
+            }
+        }
+
+        @media only screen and (max-width: 340px){
+            #genus {
+                font-size: 0.7em;
+            }
+            #ability1 {
+                font-size: 0.6em;
+            }
+            #ability2 {
+                font-size: 0.6em;
+            }
+            #type1 {
+                font-size: 0.6em;
+            }
+            #type2 {
+                font-size: 0.6em;
+            } 
+        }
+
+        @media only screen and (max-width: 310px){
+            #genus {
+                font-size: 0.6em;
+            } 
+            #ability1 {
+                font-size: 0.5em;
+            }
+            #ability2 {
+                font-size: 0.5em;
+            }
+            #type1 {
+                font-size: 0.5em;
+            }
+            #type2 {
+                font-size: 0.5em;
+            }
+        }
+        @media only screen and (max-width: 270px){
+            #genus {
+                font-size: 0.5em;
+            } 
+            #ability1 {
+                font-size: 0.4em;
+            }
+            #ability2 {
+                font-size: 0.4em;
+            }
+            #type1 {
+                font-size: 0.4em;
+            }
+            #type2 {
+                font-size: 0.4em;
+            }
+        }
+
+        @media only screen and (max-width: 991px) {
+             #theIMG2 {
+                width: 100%;
+            } 
+        }
+
+        @media only screen and (max-width: 691px) {
+             #theIMG2 {
+                width: 100%;
             } 
         }
     </style>
@@ -59,17 +216,438 @@
 
         $(document).ready(function(){
 
-            queryURL = "https://pokeapi.co/api/v2/pokemon/1/";
-
+            var name;
+            var genus; 
+            $('#evoDropdown').val('select');
+            if (localStorage.getItem("name") !== null) {
+                queryURL = "https://pokeapi.co/api/v2/pokemon/" + (localStorage.getItem("name"));
+                name = localStorage.getItem("name");
+            } else {
+                queryURL = "https://pokeapi.co/api/v2/pokemon/1";
+            }    
+        
             $.ajax({
             url: queryURL,
             method: "GET"
             }).then(function(response) {
                 
-                $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
-            
+                    $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                    $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                    name = response.name;
+                    $("#pokemonName").html(response.name);
+                    $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
+                    if (response.types.length==2){
+                        $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
+                    } else {
+                        $("#type2").html("");
+                    }
+                    
+                    $("#ability1").html(response.abilities[0].ability.name);
+
+                    if (response.abilities.length==2){
+                        $("#ability2").html(response.abilities[1].ability.name);
+                    } else {
+                        $("#ability2").html("");
+                    }
+                    $("#height").html(response.height);
+                    $("#weight").html(response.weight);
             });
 
+            if (localStorage.getItem("name") !== null) {
+                queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + (localStorage.getItem("name"));
+            } else {
+                queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/1";
+            }  
+           
+                $.ajax({
+                url: queryLink2,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html("<p style=\"text-align:center; margin: 0 auto\">" + response.flavor_text_entries[lang].flavor_text + "</p>");
+                    $("#genus").html(response.genera[2].genus);
+                    
+                    $("#form1").text(response.varieties[0].pokemon.name);
+
+                    if (response.varieties.length > 1){
+                            $("#form2").html(response.varieties[1].pokemon.name);
+                            $("#form2").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form2").text("");
+                    }
+                    if (response.varieties.length > 2){
+                            $("#form3").html(response.varieties[2].pokemon.name);
+                            $("#form3").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form3").text("");
+                    }
+                    if (response.varieties.length > 3){
+                            $("#form4").html(response.varieties[3].pokemon.name);
+                            $("#form4").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form4").text("");
+                    }
+                    
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
+                        if (response.varieties.length > 0){
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.varieties.length > 0){
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+                    
+            });
+
+            $("#Search").on("click", function(){
+                
+                var queryLink = "https://pokeapi.co/api/v2/pokemon/" + $("#Searchbox").val();
+
+                $.ajax({
+                url: queryLink,
+                method: "GET"
+
+                }).then(function(response) {
+                    
+                    $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                    $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                    $("#pokemonName").html(response.name);
+                    name = response.name;
+                    $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
+                    if (response.types.length==2){
+
+                        $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
+                    } else {
+                        $("#type2").html("");
+                    }
+
+                    $("#ability1").html(response.abilities[0].ability.name);
+
+                    if (response.abilities.length==2){
+                        $("#ability2").html(response.abilities[1].ability.name);
+                    } else {
+                        $("#ability2").html("");
+                    }
+
+                });
+
+                var queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + $("#Searchbox").val();
+                $.ajax({
+                url: queryLink2,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html(response.flavor_text_entries[lang].flavor_text);
+                    $("#genus").html(response.genera[2].genus);
+
+                    $("#form1").text(response.varieties[0].pokemon.name);
+
+                    if (response.varieties.length > 1){
+                            $("#form2").html(response.varieties[1].pokemon.name);
+                            $("#form2").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form2").text("");
+                    }
+                    if (response.varieties.length > 2){
+                            $("#form3").html(response.varieties[2].pokemon.name);
+                            $("#form3").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form3").text("");
+                    }
+                    if (response.varieties.length > 3){
+                            $("#form4").html(response.varieties[3].pokemon.name);
+                            $("#form4").attr("style","text-transform: capitalize");
+                    } else {
+                            $("#form4").text("");
+                    }
+
+
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+
+                });
+            });
+
+            $("#evoDropdown").change(function(){
+                
+                var currentEvo = $('#evoDropdown').find(":selected").text();
+                var queryLink3 = "https://pokeapi.co/api/v2/pokemon/" + currentEvo.toLowerCase();
+
+                $.ajax({
+                url: queryLink3,
+                method: "GET"
+
+                }).then(function(response) {
+            
+                        
+                        $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                        $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                        $("#pokemonName").html(response.name);
+
+                        name = response.name;
+
+                        $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
+                        if (response.types.length==2){
+
+                            $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
+                        } else {
+                            $("#type2").html("");
+                        }
+
+                        $("#ability1").html(response.abilities[0].ability.name);
+
+                        if (response.abilities.length==2){
+                            $("#ability2").html(response.abilities[1].ability.name);
+                        } else {
+                            $("#ability2").html("");
+                        }
+                });
+
+                var queryLink4 = "https://pokeapi.co/api/v2/pokemon-species/" + currentEvo.toLowerCase();
+                $.ajax({
+                url: queryLink4,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html(response.flavor_text_entries[lang].flavor_text);
+                    $("#genus").html(response.genera[2].genus);
+
+                    $("#form1").text(response.varieties[0].pokemon.name);
+
+                    if (response.varieties.length > 1){
+                        $("#form2").html(response.varieties[1].pokemon.name);
+                        $("#form2").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form2").text("");
+                    }
+                    if (response.varieties.length > 2){
+                        $("#form3").html(response.varieties[2].pokemon.name);
+                        $("#form3").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form3").text("");
+                    }
+                    if (response.varieties.length > 3){
+                        $("#form4").html(response.varieties[3].pokemon.name);
+                        $("#form4").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form4").text("");
+                    }
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+
+                });
+
+            }); 
+
+            $("#formDropdown").change(function(){
+                
+                var currentEvo = $('#formDropdown').find(":selected").text();
+                var queryLink3 = "https://pokeapi.co/api/v2/pokemon/" + currentEvo.toLowerCase();
+                $('#formDropdown').val('select2');
+                $.ajax({
+                url: queryLink3,
+                method: "GET"
+
+                }).then(function(response) {
+            
+                        
+                        $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
+                        $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
+                        $("#pokemonName").html(response.name);
+
+                        name = response.name;
+
+                        $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
+                        if (response.types.length==2){
+
+                            $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
+                        } else {
+                            $("#type2").html("");
+                        }
+
+                        $("#ability1").html(response.abilities[0].ability.name);
+
+                        if (response.abilities.length==2){
+                            $("#ability2").html(response.abilities[1].ability.name);
+                        } else {
+                            $("#ability2").html("");
+                        }
+                });
+
+                var queryLink4 = "https://pokeapi.co/api/v2/pokemon-species/" + currentEvo.toLowerCase();
+                $.ajax({
+                url: queryLink4,
+                method: "GET"
+
+                }).then(function(response) {
+
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
+                    audio.play(); 
+
+                    $("#description").html(response.flavor_text_entries[lang].flavor_text);
+                    $("#genus").html(response.genera[2].genus);
+
+                    $("#form1").text(response.varieties[0].pokemon.name);
+
+                    if (response.varieties.length > 1){
+                        $("#form2").html(response.varieties[1].pokemon.name);
+                        $("#form2").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form2").text("");
+                    }
+                    if (response.varieties.length > 2){
+                        $("#form3").html(response.varieties[2].pokemon.name);
+                        $("#form3").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form3").text("");
+                    }
+                    if (response.varieties.length > 3){
+                        $("#form4").html(response.varieties[3].pokemon.name);
+                        $("#form4").attr("style","text-transform: capitalize");
+                    } else {
+                        $("#form4").text("");
+                    }
+
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+
+                });
+
+            }); 
 
         });
 
@@ -81,25 +659,27 @@
          <div class="container mainWindow">
             <div class="row">
                 
-                <select>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                <select id="evoDropdown">
+                    <option value="select">Evolution Forms</option>
+                    <option id="evo1" value="evo1" style="text-transform:capitalize"></option>
+                    <option id="evo2" value="evo2" style="text-transform:capitalize"></option>
+                    <option id="evo3" value="evo3" style="text-transform:capitalize"></option>
                   </select> 
-                  <select>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                  <select  id="formDropdown">
+                    <option value="select2">Forms (if any)</option>
+                    <option id="form1" style="text-transform:capitalize" value="form1"></option>
+                    <option id="form2" style="text-transform:capitalize" value="form2"></option>
+                    <option id="form3" style="text-transform:capitalize" value="form3"></option>
+                    <option id="form4" style="text-transform:capitalize" value="form4"></option>
                   </select> 
+                  <input id="Searchbox" placeholder="Search by ID or Name" style="margin-left: 205px"></input>
+                  <button id="Search" style="font-size: 10px; margin-left: 10px">PokeSearch!</button>
             </div>
             <div class="container mainWindow2" style="height: 530px; border: 1px solid black;">
-                <div class="row" id="topBar" style="background-color:red; border-bottom: 5px solid black">
+                <div class="row" id="topBar" style="background-color:red; border-bottom: 5px solid black; box-shadow: 2px 20px rgba(155,155,155, 0.8);">
                     
-                        <h3 style="color:white; padding-left:10px; margin: 2px"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> INFO </h3>
-                        <!-- <span id="menuShadow" style="background-color: darkgrey; height: 23px; width: 958px; border-bottom: 5px solid rgb(205,205,205)"> -->
-
+                        <h3 style="color:white; padding-left:10px; margin: 2px;"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>INFO </h3>
+                    
                         </span>
                 </div>
 
@@ -110,44 +690,46 @@
                         
                         <div class="col-lg-7 col-md-7 col-xs-7 col-sm-7" id="boxWrapper">
                             <div class="row" style="height: 100px; margin-top: 20px">
-                                <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black" id="pokemonName">
-                                  
-                                        <!-- <span style="background-color: red; height: 43px; width: 534px; position: absolute; right: 12.8px; border-radius: 3px 3px 0px 0px; border-bottom: 5px solid rgb(254,153,171);"> -->
-                                            <img src="assets/images/pokeball2.png" style="width: 30px; position:relative; left: 0px; bottom: 0px; border-radius: 3px;">
-                                        <!-- </span> -->
+                                <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black">
+            
+                                            <p style="padding-right: 50%; background-color:red;">
+                                                <img src="assets/images/pokeball2.png" style="margin-left: 5px; width: 30px ;background-color: red; border-radius: 3px;"> 
+                                                <span id="pokemonName" style="text-transform:capitalize">Hello </span>
+                                            </p>
+                                            <span id="genus" style="margin-left:5%; overflow:auto">Pokemon Name</span>
+
+
                                 </div>
                             </div>
-                            <div class="row" style="height: 100px">
-                                <div id="shiny" class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="background-color: white; height: 80px; margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black">
-                                        <!-- <span style="background-color: red; height: 15px; width: 88.4px; position: absolute; right: 0px; border-radius: 2px 2px 0px 0px; border-bottom: 3px solid rgb(254,153,171)"> -->
 
-                                        <!-- </span> -->
-                                        hello
-
-                                        hello
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="height: 80px; margin: 10px; width: 100%">
-
-                                    <div id="type1" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px">Type 1</p>
+                            <div class="row">
+                            
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-3"></div>
+                                        <div class="col-3" id="type1" style="border-radius: 5px;overflow:auto">Type 1</div>
+                                        <div class="col-3" id="type2" style="border-radius: 5px;overflow:auto">Type 2</div>
                                     </div>
-                                    <div id="type2" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px">Type 2</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="background-color: white; height: 80px; margin: 10px; width: 100%">
-                                       
-                                    <div id="ability1" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                         Ability 1
-                                    </div>
-                                    <div id="ability2" class="row" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                         Ability 2
+                            
+                                    <div class="row">
+                                        
+                                        <div class="col-6" id="ability1" style="border-radius: 5px; border: 2px solid black; overflow:auto; text-align: center">Ability 1</div>
+                                        <div class="col-6" id="ability2" style="border-radius: 5px; border: 2px solid black; overflow:auto; text-align: center">Ability 2</div>
+                            
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row" style="height: 92px; margin-right: 1px">
                                  <div id="heightWeight" class="col-lg-8 offset-lg-4 col-md-8 offset-md-4 col-xs-8 offset-xs-4 col-sm-8 offset-sm-4" style="border: 3px solid black; background-color:white; border-radius: 5px">
+                                        <div style="height:50%; margin-bottom: -5%; margin-left: -5%">
 
+                                            <p style="margin-top:10px; margin-left: 10%">HT <span id="height" style="margin-left:35%">150</span></p>    
+                                        </div>  
+                                        <div style="height:50%; width: 110%; margin-left: -6%; border-top: 4px dotted grey">
+                                            <p style="margin-top:10px; margin-left: 10%">WT <span id="weight" style="margin-left:30%">150</span></p>    
+                                        </div>
+                                        
                                  </div>
                             </div>
                         </div>          
