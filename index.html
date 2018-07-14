@@ -51,6 +51,18 @@
             font-size: 1em;
         }
 
+        #evo1 {
+            text-transform: capitalize;
+        }
+
+        #evo2 {
+            text-transform: capitalize;
+        }
+
+        #evo3 {
+            text-transform: capitalize;
+        }
+
         @media only screen and (max-width: 991px) {
              #theIMG {
                /* margin-right: -200px; */
@@ -212,6 +224,7 @@
 
             var name;
             var genus; 
+            $('#evoDropdown').val('select');
             if (localStorage.getItem("name") !== null) {
                 queryURL = "https://pokeapi.co/api/v2/pokemon/" + (localStorage.getItem("name"));
                 name = localStorage.getItem("name");
@@ -233,13 +246,14 @@
                     $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
                     name = response.name;
                     $("#pokemonName").html(response.name);
-                    $("#type1").html(response.types[0].type.name);
+                    $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
 
                     if (response.types.length==2){
-                        $("#type2").html(response.types[1].type.name);
+                        $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                     } else {
-                            $("#type2").html("");
+                        $("#type2").html("");
                     }
+                    
                     $("#ability1").html(response.abilities[0].ability.name);
 
                     if (response.abilities.length==2){
@@ -278,6 +292,31 @@
                     $("#description").html("<p style=\"text-align:center; margin: 0 auto\">" + response.flavor_text_entries[lang].flavor_text + "</p>");
                     $("#genus").html(response.genera[2].genus);
 
+                    var queryLinkEvo = response.evolution_chain.url;
+                    $.ajax({
+                        
+                        url: queryLinkEvo,
+                        method: "GET"
+
+                    }).then(function(response) {
+                               
+                        $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
+                        if (response.chain.evolves_to.length > 0){
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo2").text("");
+                        }
+                        if (response.chain.evolves_to[0].evolves_to.length > 0){
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
+                        } else {
+                            $("#evo3").text("");
+                        }
+
+                    });
+                    
             });
 
             $("#Search").on("click", function(){
@@ -294,11 +333,11 @@
                     $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
                     $("#pokemonName").html(response.name);
                     name = response.name;
-                    $("#type1").html(response.types[0].type.name);
+                    $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
 
                     if (response.types.length==2){
 
-                        $("#type2").html(response.types[1].type.name);
+                        $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                     } else {
                         $("#type2").html("");
                     }
@@ -333,11 +372,18 @@
 
                 }).then(function(response) {
 
-                    genus = response.genera[2].genus;
-                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
 
-                    $("#description").html(response.flavor_text_entries[1].flavor_text);
+                    $("#description").html(response.flavor_text_entries[lang].flavor_text);
                     $("#genus").html(response.genera[2].genus);
 
                     var queryLinkEvo = response.evolution_chain.url;
@@ -349,13 +395,16 @@
                     }).then(function(response) {
                                
                         $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
                         if (response.chain.evolves_to.length > 0){
-                            $("#evo2").text(response.chain.evolves_to[0].species.name);
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
                         } else {
                             $("#evo2").text("");
                         }
                         if (response.chain.evolves_to[0].evolves_to.length > 0){
-                            $("#evo3").text(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
                         } else {
                             $("#evo3").text("");
                         }
@@ -383,11 +432,11 @@
 
                         name = response.name;
 
-                        $("#type1").html(response.types[0].type.name);
+                        $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
 
                         if (response.types.length==2){
 
-                            $("#type2").html(response.types[1].type.name);
+                            $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                         } else {
                             $("#type2").html("");
                         }
@@ -408,11 +457,18 @@
 
                 }).then(function(response) {
 
-                    genus = response.genera[2].genus;
-                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[1].flavor_text);
+                    var lang;
+                    for (var i = 0; i < response.flavor_text_entries.length; i++){
+                        if (response.flavor_text_entries[i].language.name == "en"){
+                            lang = i;
+                            i = response.flavor_text_entries.length;
+                        }
+                    }
+                    genus = response.genera[lang].genus;
+                    var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
 
-                    $("#description").html(response.flavor_text_entries[1].flavor_text);
+                    $("#description").html(response.flavor_text_entries[lang].flavor_text);
                     $("#genus").html(response.genera[2].genus);
 
                     var queryLinkEvo = response.evolution_chain.url;
@@ -424,13 +480,16 @@
                     }).then(function(response) {
                                
                         $("#evo1").text(response.chain.species.name);
+                        $('#evoDropdown').val('select');
                         if (response.chain.evolves_to.length > 0){
-                            $("#evo2").text(response.chain.evolves_to[0].species.name);
+                            $("#evo2").html(response.chain.evolves_to[0].species.name);
+                            $("#evo2").attr("style","text-transform: capitalize");
                         } else {
                             $("#evo2").text("");
                         }
                         if (response.chain.evolves_to[0].evolves_to.length > 0){
-                            $("#evo3").text(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").html(response.chain.evolves_to[0].evolves_to[0].species.name);
+                            $("#evo3").attr("style","text-transform: capitalize");
                         } else {
                             $("#evo3").text("");
                         }
@@ -465,10 +524,10 @@
             <div class="row">
                 
                 <select id="evoDropdown">
-                    <option value="volvo">Evolution Forms</option>
-                    <option id="evo1" value="evo1" style="text-transform:capitalize">Ivysaur</option>
-                    <option id="evo2" value="evo2" style="text-transform:capitalize">Venusaur</option>
-                    <option id="evo3" value="evo3" style="text-transform:capitalize">Audi</option>
+                    <option value="select">Evolution Forms</option>
+                    <option id="evo1" value="evo1" style="text-transform:capitalize"></option>
+                    <option id="evo2" value="evo2" style="text-transform:capitalize"></option>
+                    <option id="evo3" value="evo3" style="text-transform:capitalize"></option>
                   </select> 
                   <select>
                     <option value="volvo">Volvo</option>
@@ -480,7 +539,7 @@
                   <button id="Search">Search for Pokemon (ID or Name)</button>
             </div>
             <div class="container mainWindow2" style="height: 530px; border: 1px solid black;">
-                <div class="row" id="topBar" style="background-color:red; border-bottom: 5px solid black;">
+                <div class="row" id="topBar" style="background-color:red; border-bottom: 5px solid black; box-shadow: 2px 20px rgba(155,155,155, 0.8);">
                     
                         <h3 style="color:white; padding-left:10px; margin: 2px;"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>INFO </h3>
                         <!-- <span id="menuShadow" style="background-color: darkgrey; height: 23px; width: 958px; border-bottom: 5px solid rgb(205,205,205)"> -->
@@ -496,54 +555,31 @@
                         <div class="col-lg-7 col-md-7 col-xs-7 col-sm-7" id="boxWrapper">
                             <div class="row" style="height: 100px; margin-top: 20px">
                                 <div style="height: 80px; background-color: white;  margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black">
-                                        
-                                        <!-- <span style="background-color: red; height: 43px; width: 534px; position: absolute; right: 12.8px; border-radius: 3px 3px 0px 0px; border-bottom: 5px solid rgb(254,153,171);"> -->
+            
                                             <p style="padding-right: 50%; background-color:red;">
                                                 <img src="assets/images/pokeball2.png" style="margin-left: 5px; width: 30px ;background-color: red; border-radius: 3px;"> 
                                                 <span id="pokemonName" style="text-transform:capitalize">Hello </span>
                                             </p>
                                             <span id="genus" style="margin-left:5%; overflow:auto">Pokemon Name</span>
-                                            <!-- </span> -->
+
 
                                 </div>
                             </div>
-                            <!-- <div class="row" style="height: 100px">
-                                <div id="shiny" class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="background-color: white; height: 80px; margin: 10px; width: 100%; border-radius: 5px; border: 3px solid black">
-                                        
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 10px; width: 100%" id="abty">
 
-                                    <div class="row" id="t1" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px" id="type1">Type 1</p>
-                                    </div>
-                                    <div class="row" id="a1" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                          <p style="margin-top:9px" id="ability1">Ability 1</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin: 10px; width: 100%">
-                                       
-                                    <div class="row" id="t2" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                        <p style="margin-top:9px" id="type2">Type2</p>
-                                    </div>
-                                    <div class="row" id="a2" style="height: 40px; background-color: white; border: 2px solid black; border-radius: 5px; margin-bottom: 2px">
-                                        <p style="margin-top:9px" id="ability2">Ability 2</p>
-                                    </div>
-                                </div>
-                            </div> -->
 <!-- //flex-nowrap -->
                             <div class="row">
                             
                                 <div class="col-12">
                                     <div class="row">
-                                        <!-- <div class="col-3"></div> -->
-                                        <div class="col-6" id="type1" style="border-radius: 5px; border: 2px solid black; overflow:auto">Type 1</div>
-                                        <div class="col-6" id="type2" style="border-radius: 5px; border: 2px solid black; overflow:auto">Type 2</div>
+                                        <div class="col-3"></div>
+                                        <div class="col-3" id="type1" style="border-radius: 5px;overflow:auto">Type 1</div>
+                                        <div class="col-3" id="type2" style="border-radius: 5px;overflow:auto">Type 2</div>
                                     </div>
                             
                                     <div class="row">
                                         <!-- <div class="col-3"></div> -->
-                                        <div class="col-6" id="ability1" style="border-radius: 5px; border: 2px solid black; overflow:auto">Ability 1</div>
-                                        <div class="col-6" id="ability2" style="border-radius: 5px; border: 2px solid black; overflow:auto">Ability 2</div>
+                                        <div class="col-6" id="ability1" style="border-radius: 5px; border: 2px solid black; overflow:auto; text-align: center">Ability 1</div>
+                                        <div class="col-6" id="ability2" style="border-radius: 5px; border: 2px solid black; overflow:auto; text-align: center">Ability 2</div>
                             
                                     </div>
                                 </div>
@@ -552,7 +588,7 @@
                             <div class="row" style="height: 92px; margin-right: 1px">
                                  <div id="heightWeight" class="col-lg-8 offset-lg-4 col-md-8 offset-md-4 col-xs-8 offset-xs-4 col-sm-8 offset-sm-4" style="border: 3px solid black; background-color:white; border-radius: 5px">
                                         <div style="height:50%; margin-bottom: -5%; margin-left: -5%">
-                                        <!-- <p style=" margin-left: 10%">HT <span style="margin-left:30%">150</span></p>     -->
+
                                             <p style="margin-top:10px; margin-left: 10%">HT <span id="height" style="margin-left:35%">150</span></p>    
                                         </div>  
                                         <div style="height:50%; width: 115%; margin-left: -6%; border-top: 4px dotted grey">
