@@ -4,63 +4,142 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Click Button with Firebase!</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
-    crossorigin="anonymous">
-  <!-- -->
+  <title>Pokemon</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Cormorant+Unicase" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="assets/fonts/font.ttf"> 
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <style>
+
+    body {
+      /* font-family: 'Cormorant Unicase', serif; */
+      font-weight: strong;
+      font-family: PokemonFont;
+    }
+
+    @font-face {
+    font-family: PokemonFont;
+    src: url("assets/fonts/font.ttf");
+    }
+
+    #myPokemonTable{
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border-width: 2px;
+}
+
+
+.table-hover>tbody>tr>td:hover, .table-hover>tbody>tr>td:hover{
+        background-color: rgba(255, 0, 0, 0.2);;
+        
+    }
+
+
+
+
+
+</style>
 
 </head>
 
     <body>
-        <table  id="myPokemonTable"style="width:100% ; border:solid">
-            <tr  style="border:solid">
-              <th>#</th>
-              <th>Picture</th> 
-              <th>Name</th>
-              <th>Type 1</th>
-              <th>Type 2</th>
+      <div>
+      <div style="background: red; width:80%; max-width: 960px; margin:auto; border-top-left-radius:35px;border-top-right-radius: 35px;">
+        <img src="assets/images/pokeball2.png" style=" width: 45px ;margin:20px; border-radius: 3px;"> 
+      
+        <input type="text" id="searchBar" style="width:30% ;float:right;margin-top:45px;margin-right:15px"placeholder="name/ID/type">
+        <button style="float:right; margin-top:45px;margin-right:10px" id="searchPokes">Search</button>
+      </div>
+          
+      </div> 
+      
+        <table  class="table table-hover table-bordered" style="width:80% ; max-width: 960px;margin:auto;" id="myPokemonTable">
+          <thead>
+          <tr  style="border:solid"> 
+              <th scope='row'></th>
+              <th scope="col-md-3">ID</th>
+              <th scope="col-md-3">Sprites</th> 
+              <th scope="col-md-3">Name</th>
+              <th scope="col-md-3">Type 1</th>
+              <th scope="col-md-3">Type 2</th>
             </tr>
-            <tr>
-              <td>40</td>
-              <td>Picture Here</td> 
-              <td>Pikachu</td>
-              <td>Electric</td>
-              <td>Grass</td>
-            </tr>
-        </table>    
-    </body>
+          </thead>
+          <tbody id="tableBody">
+
+          </tbody>  
+        </table>  
+      </div>  
+    
+    
 <div id="pokemonTableWindow">
 
 </div>
+</body>
 <script>
 
+$("#searchPokes").on("click", function () {
+  pokemonVal = $("#searchBar").val();
+  if (pokemonVal !== "" && pokemonVal !== "fire" && pokemonVal !== "ice"
+      && pokemonVal !== "normal" && pokemonVal !== "fighting" && pokemonVal !== "flying"
+      && pokemonVal !== "water" && pokemonVal !== "grass" && pokemonVal !== "poison"
+      && pokemonVal !== "electric" && pokemonVal !== "ground" && pokemonVal !== "psychic"
+      && pokemonVal !== "rock" && pokemonVal !== "bug" && pokemonVal !== "dragon"
+      && pokemonVal !== "ghost" && pokemonVal !== "dark" && pokemonVal !== "steel"
+      && pokemonVal !== "fairy"){
 
+    $(document).ready(function(){ 
+      queryURL = "https://pokeapi.co/api/v2/pokemon/"+pokemonVal+"/";
+      $.ajax({
+      url: queryURL,
+      method: "GET"
+      }).then(function(response) {
+        console.log(response);
+        $('#tableBody').append("<tr id='pokes'style='border:solid'><th scope='row'></th><td>"+response.id+"</td><td><img style=\"max-width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
 
+      });
 
-$(document).ready(function(){
   
-for(var i = 1; i<10; i++){
+    });
 
-queryURL = "https://pokeapi.co/api/v2/pokemon/"+i+"/";
+  }
+  else{
 
+  
 
-$.ajax({
-url: queryURL,
-method: "GET"
-}).then(function(response) {
-  console.log(response);
-  $('#myPokemonTable').append("<tr style='border:solid'><td>"+response.id+"</td><td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
-  //$('#myPokemonTable').append("<td><img style=\"width:350px; margin-left:20px\" src=\"" + response.sprites.front_shiny + "\"></td>")
-  //$('#myPokemonTable').append("<td>"+response.name+"</td>");
-  //$('#myPokemonTable').append("<td>"+response.types[0].type.name+"</td>");
-  //$('#myPokemonTable').append("<td>"+response.types[1].type.name+"</td>");
+  $(document).ready(function(){
+  var type = pokemonVal;
+  for(var i = 1; i<20; i++){
+   
+    queryURL = "https://pokeapi.co/api/v2/pokemon/"+i+"/";
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+      }).then(function(response) {
+        
+        if(response.types[0].type.name === type){
+          console.log(response);
+          $('#tableBody').append("<tr id='pokes'style='border:solid'><th scope='row'></th><td>"+response.id+"</td><td><img style=\"max-width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
+        }
+    });
 
+  }
 });
-
 }
 });
+
+// api maps key: AIzaSyDJJwQTT1bzDxMzFNWgdR4KUwgDDekLogw
+
+
+
 
 </script>
 

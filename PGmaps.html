@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PokeMaps</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+    crossorigin="anonymous"></script>
+  
+  <link href="https://fonts.googleapis.com/css?family=Cormorant+Unicase" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link href="assets/fonts/font.ttf">
+  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyB5Ugq8rh8gFP6SMX38Nx4_5-3YtYuJnCY",
+      authDomain: "pokemastersunite-1531512209090.firebaseapp.com",
+      databaseURL: "https://pokemastersunite-1531512209090.firebaseio.com",
+      projectId: "pokemastersunite-1531512209090",
+      storageBucket: "pokemastersunite-1531512209090.appspot.com",
+      messagingSenderId: "871367348175"
+    };
+    firebase.initializeApp(config);
+  </script>
+
+
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+    #map {
+      height: 100%;
+      width: 50%;
+      margin-left: 5%;
+      border-style: dashed;
+      border-width: 3px;
+      border-color: red;
+      border-top: none;
+    }
+
+
+    /* Optional: Makes the sample page fill the window. */
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+
+    }
+
+    body {
+      /* font-family: 'Cormorant Unicase', serif; */
+      font-weight: strong;
+      font-family: PokemonFont;
+    }
+
+    #map {
+      display: inline-block;
+    }
+
+    #msgBox {
+      display: inline-block;
+      margin-left: 0px;
+    }
+
+    #playerTable {
+      width: 100%;
+    }
+
+    @font-face {
+      font-family: PokemonFont;
+      src: url("assets/fonts/font.ttf");
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container" style="border-style:solid;border-width:3px;border-color: red;border-radius: 35px;width:80%;">
+    <img src="https://logos-download.com/wp-content/uploads/2016/07/Pok%C3%A9mon_logo.png" style="max-width: 250px;height:auto; padding:10px;">
+    <input type="text" id="trainerName" style="width:15% ;float:right;margin-top:45px;margin-right:15px" placeholder="name">
+    <button style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" id="searchPlayers">Go Online</button>
+  </div>
+  <div class="container" style="height:100%;">
+    <div id="map"></div>
+    <div id="msgBox" style="margin-left:0px;border-style:solid;border-width:3px;border-color: red;height:100%;width:40%;border-top:none;">
+      <table class="table table-hover table-bordered" style="width:100% ; max-width: 960px;margin:auto;" id="plyerTable">
+        <thead>
+          <tr style="width:100%;">
+            <!-- <th scope='row'></th> -->
+            <th>Players Online</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <script>
+
+    //////////////////////////////////////////////////////////////////////////////
+    /////     vars below                       ////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
+
+    var map;
+    var amtTraining;
+    var iconBase = 'https://cdn.iconscout.com/public/images/icon/premium/png-128/location-pokemon-pokeball-3476aca8ecd2f053-128x128.png';
+
+    //////////////////////////////////////////////////////////////////////////////
+    /////   set up the database to have a reference of the number of players   ////////
+    //////////////////////////////////////////////////////////////////////////////
+    firebase.database().ref("trainersOnline/" + "numOfTrainer").on("value", function (snapshot) {
+              var getIt = snapshot.val();
+              amtTraining = getIt;
+              if(amtTraining === null){
+                amtTraining = 0;
+                firebase.database().ref().child("trainersOnline").set({
+                numOfTrainer: amtTraining
+              });
+              }
+    });
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+////////////// initiate the map ////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 6
+      });
+
+      //////////////////////////////////////////////////////////////////////
+      ////////////////              click event         /////////////////////////
+      /////////////////////////////////////////////////////////////////////////
+      $("#searchPlayers").on("click", function () {
+        trainerNamez = $("#trainerName").val();
+        
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+
+            };
+            database = firebase.database();
+
+            database.ref("trainersOnline/" + "numOfTrainer").on("value", function (snapshot) {
+              amtTraining = snapshot.val();
+
+            });
+
+            amtTraining++;
+            database.ref().child("trainersOnline").set({
+              numOfTrainer: amtTraining
+            });
+
+            console.log(database.ref().child("Trainers " + amtTraining));
+
+            database.ref().child("Trainers " + amtTraining).set({
+              name: trainerNamez,
+              position: pos
+            });
+            
+            console.log(amtTraining);
+
+            var marker = new google.maps.Marker({
+              position: pos,
+              icon: iconBase,
+              map: map
+            });
+            map.setZoom(13);
+            map.setCenter(marker.getPosition());
+            //infoWindow.open(map);
+            map.setCenter(pos);
+          }, 
+          function () {
+            handleLocationError(true, new google.maps.InfoWindow("failed to launch!"), map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, new google.maps.InfoWindow("failed to launch!"), map.getCenter());
+        }
+      });
+
+    infoWinow = new google.maps.InfoWindow();
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
+      infoWindow.open(map);
+    }
+  }  
+
+//////////////////////////////////////////////////////////////////////
+///////////////////  pull people from database and place on map///////
+/////////////////////////////////////////////////////////////////////
+database = firebase.database();
+var timesLoop;
+database.ref("trainersOnline/" + "numOfTrainer").on("value", function (snapshot) {
+  timesLoop = snapshot.val();
+});
+for(var i = 0;i < timesLoop;i++){
+  console.log("hi")
+} 
+
+
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJJwQTT1bzDxMzFNWgdR4KUwgDDekLogw&callback=initMap">
+  </script>
+</body>
+
+</html>
