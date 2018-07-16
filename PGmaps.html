@@ -36,13 +36,10 @@
        * element that contains the map. */
 
     #map {
-      height: 100%;
-      width: 50%;
-      margin-left: 5%;
-      border-style: dashed;
+      border-style: solid;
       border-width: 3px;
       border-color: red;
-      border-top: none;
+      border-radius: 35px;
     }
 
 
@@ -62,56 +59,98 @@
       font-family: PokemonFont;
     }
 
-    #map {
-      display: inline-block;
-    }
-
-    #msgBox {
-      display: inline-block;
-      margin-left: 0px;
-    }
-
-    #playerTable {
-      width: 100%;
-    }
 
     @font-face {
       font-family: PokemonFont;
       src: url("assets/fonts/font.ttf");
     }
+
+    button{
+      background:white;
+      color:red;
+      border-style: solid;
+      border-color: red;
+      border-radius: 20px;
+    }
+    button:hover{
+      background:rgb(255, 204, 37);
+      color:blue;
+      border-style: solid;
+      border-color: blue;
+    } 
   </style>
 </head>
 
 <body>
-
-  <div class="container" style="border-style:solid;border-width:3px;border-color: red;border-radius: 35px;width:80%;">
-    <img src="https://logos-download.com/wp-content/uploads/2016/07/Pok%C3%A9mon_logo.png" style="max-width: 250px;height:auto; padding:10px;">
-    <input type="text" id="trainerName" style="width:15% ;float:right;margin-top:45px;margin-right:15px" placeholder="name">
-    <button style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" id="searchPlayers">Go Online</button>
+<div class="container">
+<div class="row">
+  <div class="col-md-12" style="border-style:solid;border-width:3px;border-color: red;border-radius: 35px;width:80%;">
+    <img src="https://logos-download.com/wp-content/uploads/2016/07/Pok%C3%A9mon_logo.png" style="max-width: 250px;height:auto; padding:10px;">    
+      <input class="introDiv"type="text" id="trainerName" style="width:15% ;border-radius: 20px;float:right;margin-top:45px;margin-right:15px" placeholder="name">
+      <button class="introDiv"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" id="searchPlayers">Go Online</button>
+    <p style="float: right;margin-top:50px;"  id="groot"></p>
   </div>
-  <div class="container" style="height:100%;">
-    <div id="map"></div>
-    <div id="msgBox" style="margin-left:0px;border-style:solid;border-width:3px;border-color: red;height:100%;width:40%;border-top:none;">
-      <table class="table table-hover table-bordered" style="width:100% ; max-width: 960px;margin:auto;" id="plyerTable">
-        <thead>
-          <tr style="width:100%;">
-            <!-- <th scope='row'></th> -->
-            <th>Players Online</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
 
-        </tbody>
-      </table>
+</div>
+
+  <div class="row" style="min-height:500px;">
+    <div id="map" style="min-height:500px;padding:10px;" class="col-md-6 mx-4 my-4">
+     <!-- ---------------------- -->
     </div>
 
+    
+
+    <div id="msgBox"  class="col-md-5 mx-4 my-4"style="padding:10px;border-style:solid;border-width:3px;border-color: red;max-height:250px;border-radius:35px;">
+      <div class="container" style="overflow:auto;height:100%;max-width:90%">
+        <table class="table table-hover table-bordered" style="border-style: solid;border-color:blue;border-radius: 35px;width:100% ;margin:auto;" id="plyerTable">
+          <thead>
+            <tr style="width:100%;">
+              <!-- <th scope='row'></th> -->
+              <th style="text-align:center">Players Online</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+  
+          </tbody>
+        </table>
+      </div>
+      
+  
+        <div id="placeMsg"class="row my-5"style="overflow:auto;min-height:100%;max-height:220px;background-color:lightgray;border-style:dashed;border-color: blue;border-radius: 35px;">
+          <div style="max-width: 90%;min-width: 85%;max-height: 100%">  
+          <table class="table" style="max-width:90;margin-bottom: auto;" id="msgTable">
+                <thead>
+                  <tr style="width:100%;">
+                    <!-- <th scope='row'></th> -->
+                    <th style="text-align:center">Message Center</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBudy">
+        
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align:center;position: fixed;bottom :70px;">
+              <input id="messageHtml"class="ml-4"type="text" style="width:75% ;border-radius:20px;">
+              <button id="sendMessageBtn">GO!</button>
+            </div>
+          </div>
+
   </div>
+   
+  </div>
+
+</div>
   <script>
 
     //////////////////////////////////////////////////////////////////////////////
     /////     vars below                       ////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
-
+    var presenceRef;
+    var currentPlayer;
+    var timesLoop;
+    var newPosition;
+    var newName;
     var map;
     var amtTraining;
     var iconBase = 'https://cdn.iconscout.com/public/images/icon/premium/png-128/location-pokemon-pokeball-3476aca8ecd2f053-128x128.png';
@@ -130,6 +169,8 @@
               }
     });
 
+    $("#placeMsg").hide();
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////// initiate the map ////////////////////////////////////////////
@@ -140,13 +181,21 @@
         center: { lat: -34.397, lng: 150.644 },
         zoom: 6
       });
-
+    
       //////////////////////////////////////////////////////////////////////
       ////////////////              click event         /////////////////////////
       /////////////////////////////////////////////////////////////////////////
       $("#searchPlayers").on("click", function () {
         trainerNamez = $("#trainerName").val();
-        
+
+        if(trainerNamez === "CLEAR-DATABASE-RIGHT-NOW" ){
+          firebase.database().ref().set("");
+        }
+        if(trainerNamez !== "" && trainerNamez.length < 18){
+          localStorage.setItem("Trainer Name=",trainerNamez);
+          $("#groot").text("Welcome to PokeGoMaps "+trainerNamez+"!");
+          $(".introDiv").remove();
+          $("#placeMsg").show();
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function (position) {
             var pos = {
@@ -168,10 +217,15 @@
 
             console.log(database.ref().child("Trainers " + amtTraining));
 
+          
+
             database.ref().child("Trainers " + amtTraining).set({
               name: trainerNamez,
               position: pos
             });
+
+            localStorage.setItem("Trainer", amtTraining);
+            currentPlayer = amtTraining;
             
             console.log(amtTraining);
 
@@ -192,7 +246,88 @@
           // Browser doesn't support Geolocation
           handleLocationError(false, new google.maps.InfoWindow("failed to launch!"), map.getCenter());
         }
+        
+      
+
+      //////////////////////////////////////////////////////////////////////
+      ///////////////////  pull people from database and place on map///////
+      /////////////////////////////////////////////////////////////////////
+     
+    $("#tableBody").html("");     
+    $(document).ready(function () {
+      firebase.database().ref("trainersOnline/" + "numOfTrainer").on("value", function (snapshot) {
+        timesLoop = snapshot.val();
+        //console.log(timesLoop);
       });
+
+      for (var i = 1; i <= timesLoop; i++) {
+       // console.log("hi " + i);
+        firebase.database().ref("Trainers " + i + "/name").on("value", function (snapshot) {
+         // console.log(JSON.stringify(snapshot.val()));
+          newName = JSON.stringify(snapshot.val());
+          $('#tableBody').append("<tr><td onclick='sendInvite(this);'class='trainMe'style='text-align:center'>"+newName+"</td></tr>");
+        });
+        
+        var newLat;
+        var newLng;
+        var newLatTmp;
+        var newLngTmp;
+
+        firebase.database().ref("Trainers " + i + "/position/lat").on("value", function (snapshot) {
+          //console.log("Latitude: " + JSON.stringify(snapshot.val()));
+          newLat = parseFloat(snapshot.val());
+         // console.log(newLat);
+
+        });
+
+        firebase.database().ref("Trainers " + i + "/position/lng").on("value", function (snapshot) {
+          //console.log("Longitute " + JSON.stringify(snapshot.val()));
+          newLngTmp = parseFloat(snapshot.val());
+          //console.log(newLngTmp);
+
+          
+          if(newLngTmp === newLng){
+            newLng = newLngTmp + 0.005;
+            //console.log(newLng+ " if");
+          }
+          else{
+            newLng = newLngTmp;
+            //console.log(newLng + " else");
+          }
+          //newLng = newLngTmp;
+          
+            newPosition = {lat: newLat, lng: newLng,};
+
+            var marker = new google.maps.Marker({
+              position: newPosition,
+              icon: iconBase,
+              map: map
+
+            });
+            map.setZoom(13);
+            map.setCenter(marker.getPosition());
+            //infoWindow.open(map);
+            map.setCenter(newPosition);
+            
+        
+        
+        });
+
+    
+        
+            
+      }
+
+    });
+        }
+        else{
+          alert("Please enter your trainer name below. Your trainer name must not contain more than 18 characters.");
+        }
+  });
+
+      ///////////////////////////////////////////////////////////////////////////
+      //// in the eventuality that the user does not grant access for location....
+      ////////////////////////////////////////////////////////////////////////////////////
 
     infoWinow = new google.maps.InfoWindow();
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -202,19 +337,49 @@
         'Error: Your browser doesn\'t support geolocation.');
       infoWindow.open(map);
     }
-  }  
+  
+}
+
+
+////////////////////////////////////////////////////////////////////////
+///////////// Send invites to other players //////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+function sendInvite(elementz){
+    console.log(elementz.innerText);
+    elementz.style.backgroundColor="blue";
+    
+
+}
+
 
 //////////////////////////////////////////////////////////////////////
-///////////////////  pull people from database and place on map///////
-/////////////////////////////////////////////////////////////////////
-database = firebase.database();
-var timesLoop;
-database.ref("trainersOnline/" + "numOfTrainer").on("value", function (snapshot) {
-  timesLoop = snapshot.val();
+/////// removes data from storage when oage is disconnected /////////////
+//////////////////////////////////////////////////////////////////////
+
+var tempLocStorage = (parseInt(localStorage.getItem("Trainer"))+1);
+
+presenceRef = firebase.database().ref("Trainers "+tempLocStorage);
+// Write a string when this client loses connection
+presenceRef.onDisconnect().remove();
+
+/////////////////////////////////////////////////////////////
+///////////// Buttton to send message ///////////////////////
+//////////////////////////////////////////////////////////
+
+$("#sendMessageBtn").on("click", function(){
+  var message = $("#messageHtml").val();
+  var myName = localStorage.getItem("Trainer Name=");
+  console.log(message);
+  if(message.length < 200){
+    $('#tableBudy').append("<tr><td style='max-width:450px;font-size: 8px;text-align:left'><div style='max-width:70%;'><p>"+myName+" wrote:</p></div></td></tr>");
+    $('#tableBudy').append("<tr><td style='max-width:450px;font-size: 8px;text-align:left'><div style='max-width:70%;margin-left:30px;'><p>"+message+"</p></div></td></tr>");
+  }
+  else{
+    alert("Message are not meant to be long here! Max length = 200");
+  }
+
 });
-for(var i = 0;i < timesLoop;i++){
-  console.log("hi")
-} 
 
 
   </script>
