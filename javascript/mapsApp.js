@@ -46,6 +46,11 @@
         zoom: 6
       });
 
+
+      ///////////////////////////////////////////////////////////////
+      /////////////// goes enter key activeates click function ///// 
+      /////////////////////////////////////////////////////////////
+
       $("#trainerName").on("keydown", function (e) {
     if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
         $("#searchPlayers").click();
@@ -340,7 +345,7 @@ $("#sendMessageBtn").on("click", function(){
 ///////////eneter key to send mesaage //////////
 ////////////////////////////////////////////////
 $("#messageHtml").on("keydown", function (e) {
-    if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+    if (e.keyCode === 13) {
         
         var message = $("#messageHtml").val();
   var myName = sessionStorage.getItem("Trainer Name=");

@@ -19,6 +19,20 @@
 
   <style>
 
+    button{
+      background:white;
+      color:red;
+      border-style: solid;
+      border-color: red;
+      border-radius: 20px;
+    }
+    button:hover{
+      background:rgb(255, 204, 37);
+      color:blue;
+      border-style: solid;
+      border-color: blue;
+    } 
+
     body {
       /* font-family: 'Cormorant Unicase', serif; */
       font-weight: strong;
@@ -58,6 +72,12 @@
       
         <input type="text" id="searchBar" style="width:30% ;float:right;margin-top:45px;margin-right:15px"placeholder="name/ID/type">
         <button style="float:right; margin-top:45px;margin-right:10px" id="searchPokes">Search</button>
+        <button onclick="location.href='pokedex.html'"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" type="button">
+            Pokedex</button>
+        <button  onclick="location.href='index.html'"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" type="button">
+            Home</button>
+
+            
       </div>
           
       </div> 
@@ -86,8 +106,16 @@
 </body>
 <script>
 
+$("#searchBar").on("keydown", function (e) {
+    if (e.keyCode === 13) {  
+
+        $("#searchPokes").click();
+    }
+});
+
 $("#searchPokes").on("click", function () {
   pokemonVal = $("#searchBar").val();
+  $("#serachPokes").html("");
   if (pokemonVal !== "" && pokemonVal !== "fire" && pokemonVal !== "ice"
       && pokemonVal !== "normal" && pokemonVal !== "fighting" && pokemonVal !== "flying"
       && pokemonVal !== "water" && pokemonVal !== "grass" && pokemonVal !== "poison"
@@ -117,7 +145,7 @@ $("#searchPokes").on("click", function () {
 
   $(document).ready(function(){
   var type = pokemonVal;
-  for(var i = 1; i<20; i++){
+  for(var i = 1; i<400; i++){
    
     queryURL = "https://pokeapi.co/api/v2/pokemon/"+i+"/";
     $.ajax({
@@ -126,6 +154,10 @@ $("#searchPokes").on("click", function () {
       }).then(function(response) {
         
         if(response.types[0].type.name === type){
+          console.log(response);
+          $('#tableBody').append("<tr id='pokes'style='border:solid'><th scope='row'></th><td>"+response.id+"</td><td><img style=\"max-width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
+        }
+        if(response.types[1].type.name === type){
           console.log(response);
           $('#tableBody').append("<tr id='pokes'style='border:solid'><th scope='row'></th><td>"+response.id+"</td><td><img style=\"max-width:350px; margin-left:20px\" src=\"" + response.sprites.front_default + "\"></td><td>"+response.name+"</td><td>"+response.types[0].type.name+"</td><td>"+response.types[1].type.name+"</td></tr>");
         }
