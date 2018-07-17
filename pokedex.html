@@ -38,18 +38,23 @@
             width: 75px;
             margin-left:5%;
         }
+
         p {
             font-size: 1em;
         }
+
         #evo1 {
             text-transform: capitalize;
         }
+
         #evo2 {
             text-transform: capitalize;
         }
+
         #evo3 {
             text-transform: capitalize;
         }
+
         @media only screen and (max-width: 991px) {
              #theIMG {
                /* margin-right: -200px; */
@@ -65,27 +70,35 @@
                margin-top:35%;
                width:90%;
             } 
+
             p {
                 font-size: 0.6em;
             }
+
             #a1 {
                 width:150%;
             }
+
             #t1 {
                 width:150%;
             }
+
             #a2 {
                 width:150%;
             }
+
             #t2 {
                 width:150%;
             }
+
         }
+
         @media only screen and (max-width: 575.5px) {
             #a1 {
                 width:40%;
                 margin: 0px;
             }
+
             #t1 {
                 width:40%;
                 margin: 0px;
@@ -94,14 +107,18 @@
                 width:40%;
                 margin: 0px;
             }
+
             #t2 {
                 width:40%;
                 margin: 0px;
             }
+
             #shiny {
                display:none;
             } 
+
         }
+
         @media only screen and (max-width: 400px){
             #genus {
                 font-size: 0.8em;
@@ -211,6 +228,7 @@
                     }
                     
                     $("#ability1").html(response.abilities[0].ability.name);
+
                     if (response.abilities.length==2){
                         $("#ability2").html(response.abilities[1].ability.name);
                     } else {
@@ -219,6 +237,7 @@
                     $("#height").html(response.height);
                     $("#weight").html(response.weight);
             });
+
             if (localStorage.getItem("name") !== null) {
                 queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + (localStorage.getItem("name"));
             } else {
@@ -228,7 +247,9 @@
                 $.ajax({
                 url: queryLink2,
                 method: "GET"
+
                 }).then(function(response) {
+
                     
                     var lang;
                     for (var i = 0; i < response.flavor_text_entries.length; i++){
@@ -240,10 +261,12 @@
                     genus = response.genera[lang].genus;
                     var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
+
                     $("#description").html("<p style=\"text-align:center; margin: 0 auto\">" + response.flavor_text_entries[lang].flavor_text + "</p>");
                     $("#genus").html(response.genera[2].genus);
                     
                     $("#form1").text(response.varieties[0].pokemon.name);
+
                     if (response.varieties.length > 1){
                             $("#form2").html(response.varieties[1].pokemon.name);
                             $("#form2").attr("style","text-transform: capitalize");
@@ -268,6 +291,7 @@
                         
                         url: queryLinkEvo,
                         method: "GET"
+
                     }).then(function(response) {
                                
                         $("#evo1").text(response.chain.species.name);
@@ -284,15 +308,19 @@
                         } else {
                             $("#evo3").text("");
                         }
+
                     });
                     
             });
+
             $("#Search").on("click", function(){
                 
                 var queryLink = "https://pokeapi.co/api/v2/pokemon/" + $("#Searchbox").val();
+
                 $.ajax({
                 url: queryLink,
                 method: "GET"
+
                 }).then(function(response) {
                     
                     $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
@@ -300,23 +328,31 @@
                     $("#pokemonName").html(response.name);
                     name = response.name;
                     $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
                     if (response.types.length==2){
+
                         $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                     } else {
                         $("#type2").html("");
                     }
+
                     $("#ability1").html(response.abilities[0].ability.name);
+
                     if (response.abilities.length==2){
                         $("#ability2").html(response.abilities[1].ability.name);
                     } else {
                         $("#ability2").html("");
                     }
+
                 });
+
                 var queryLink2 = "https://pokeapi.co/api/v2/pokemon-species/" + $("#Searchbox").val();
                 $.ajax({
                 url: queryLink2,
                 method: "GET"
+
                 }).then(function(response) {
+
                     var lang;
                     for (var i = 0; i < response.flavor_text_entries.length; i++){
                         if (response.flavor_text_entries[i].language.name == "en"){
@@ -327,9 +363,12 @@
                     genus = response.genera[lang].genus;
                     var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
+
                     $("#description").html(response.flavor_text_entries[lang].flavor_text);
                     $("#genus").html(response.genera[2].genus);
+
                     $("#form1").text(response.varieties[0].pokemon.name);
+
                     if (response.varieties.length > 1){
                             $("#form2").html(response.varieties[1].pokemon.name);
                             $("#form2").attr("style","text-transform: capitalize");
@@ -369,30 +408,41 @@
                         } else {
                             $("#evo3").text("");
                         }
+
                     });
+
                 });
             });
+
             $("#evoDropdown").change(function(){
                 
                 var currentEvo = $('#evoDropdown').find(":selected").text();
                 var queryLink3 = "https://pokeapi.co/api/v2/pokemon/" + currentEvo.toLowerCase();
+
                 $.ajax({
                 url: queryLink3,
                 method: "GET"
+
                 }).then(function(response) {
             
                         
                         $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
                         $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
                         $("#pokemonName").html(response.name);
+
                         name = response.name;
+
                         $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
                         if (response.types.length==2){
+
                             $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                         } else {
                             $("#type2").html("");
                         }
+
                         $("#ability1").html(response.abilities[0].ability.name);
+
                         if (response.abilities.length==2){
                             $("#ability2").html(response.abilities[1].ability.name);
                         } else {
@@ -403,7 +453,9 @@
                 $.ajax({
                 url: queryLink4,
                 method: "GET"
+
                 }).then(function(response) {
+
                     var lang;
                     for (var i = 0; i < response.flavor_text_entries.length; i++){
                         if (response.flavor_text_entries[i].language.name == "en"){
@@ -414,9 +466,12 @@
                     genus = response.genera[lang].genus;
                     var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
+
                     $("#description").html(response.flavor_text_entries[lang].flavor_text);
                     $("#genus").html(response.genera[2].genus);
+
                     $("#form1").text(response.varieties[0].pokemon.name);
+
                     if (response.varieties.length > 1){
                         $("#form2").html(response.varieties[1].pokemon.name);
                         $("#form2").attr("style","text-transform: capitalize");
@@ -456,9 +511,13 @@
                         } else {
                             $("#evo3").text("");
                         }
+
                     });
+
                 });
+
             }); 
+
             $("#formDropdown").change(function(){
                 
                 var currentEvo = $('#formDropdown').find(":selected").text();
@@ -467,20 +526,27 @@
                 $.ajax({
                 url: queryLink3,
                 method: "GET"
+
                 }).then(function(response) {
             
                         
                         $("#pokemonImageWindow").html("<img id=\"theIMG\" src=\"" + response.sprites.front_default + "\">");
                         $("#shiny").html("<img id=\"theIMG2\" src=\"" + response.sprites.front_shiny + "\">");
                         $("#pokemonName").html(response.name);
+
                         name = response.name;
+
                         $("#type1").html("<img src=\"assets/images/type_" + response.types[0].type.name + ".gif\" style=\"width:100%\"/>");
+
                         if (response.types.length==2){
+
                             $("#type2").html("<img src=\"assets/images/type_" + response.types[1].type.name + ".gif\" style=\"width:100%\"/>");
                         } else {
                             $("#type2").html("");
                         }
+
                         $("#ability1").html(response.abilities[0].ability.name);
+
                         if (response.abilities.length==2){
                             $("#ability2").html(response.abilities[1].ability.name);
                         } else {
@@ -491,7 +557,9 @@
                 $.ajax({
                 url: queryLink4,
                 method: "GET"
+
                 }).then(function(response) {
+
                     var lang;
                     for (var i = 0; i < response.flavor_text_entries.length; i++){
                         if (response.flavor_text_entries[i].language.name == "en"){
@@ -502,9 +570,12 @@
                     genus = response.genera[lang].genus;
                     var audio = new Audio("http://api.voicerss.org/?key=05a471cf540a4f5487dd397bb34dc941&hl=en-us&src=" + name + ". The " + genus + ". " + response.flavor_text_entries[lang].flavor_text);
                     audio.play(); 
+
                     $("#description").html(response.flavor_text_entries[lang].flavor_text);
                     $("#genus").html(response.genera[2].genus);
+
                     $("#form1").text(response.varieties[0].pokemon.name);
+
                     if (response.varieties.length > 1){
                         $("#form2").html(response.varieties[1].pokemon.name);
                         $("#form2").attr("style","text-transform: capitalize");
@@ -544,9 +615,13 @@
                         } else {
                             $("#evo3").text("");
                         }
+
                     });
+
                 });
+
             }); 
+
         });
     </script>
 
