@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>PokeMaps</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+    crossorigin="anonymous"></script>
+  
+  <link href="https://fonts.googleapis.com/css?family=Cormorant+Unicase" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link href="assets/fonts/font.ttf">
+  <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyB5Ugq8rh8gFP6SMX38Nx4_5-3YtYuJnCY",
+      authDomain: "pokemastersunite-1531512209090.firebaseapp.com",
+      databaseURL: "https://pokemastersunite-1531512209090.firebaseio.com",
+      projectId: "pokemastersunite-1531512209090",
+      storageBucket: "pokemastersunite-1531512209090.appspot.com",
+      messagingSenderId: "871367348175"
+    };
+    firebase.initializeApp(config);
+  </script>
+
+
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+      border-style: solid;
+      border-width: 3px;
+      border-color: red;
+      border-radius: 35px;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      /* font-family: 'Cormorant Unicase', serif; */
+      font-weight: strong;
+      font-family: PokemonFont;
+    }
+    @font-face {
+      font-family: PokemonFont;
+      src: url("assets/fonts/font.ttf");
+    }
+    button{
+      background:white;
+      color:red;
+      border-style: solid;
+      border-color: red;
+      border-radius: 20px;
+    }
+    button:hover{
+      background:rgb(255, 204, 37);
+      color:blue;
+      border-style: solid;
+      border-color: blue;
+    } 
+  </style>
+</head>
+
+<body>
+<div class="container">
+<div class="row">
+  <div class="col-md-12" style="border-style:solid;border-width:3px;border-color: red;border-radius: 35px;width:80%;max-height: 135px;">
+    <img src="https://logos-download.com/wp-content/uploads/2016/07/Pok%C3%A9mon_logo.png" style="max-width: 250px;height:auto; padding:10px;">    
+
+      <input class="introDiv" type="text" id="trainerName" style="width:15% ;border-radius:20px;float:right;margin-top:45px;margin-right:15px" placeholder="name">
+      <button class="introDiv"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" id="searchPlayers">Go Online</button>
+      <button  onclick="location.href='index.html'"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" type="button">
+          Home</button>
+        <button onclick="location.href='pokedex.html'"style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px" type="button">
+          Pokedex</button>
+        <button onclick="location.href='pokesListed.html'" style="float:right; margin-top:45px;margin-right:10px;margin-bottom:10px;margin-left:10px"type="button">
+          Search</button>   
+      <p style="float: right;margin-bottom:5px;"  id="groot"></p>
+  </div>
+
+</div>
+
+  <div class="row" style="min-height:500px;">
+    <div id="map" style="min-height:500px;padding:10px;" class="col-md-6 mx-4 my-4">
+     <!-- ---------------------- -->
+    </div>
+
+    
+
+    <div id="msgBox"  class="col-md-5 mx-4 my-4"style="padding:10px;border-style:solid;border-width:3px;border-color: red; min-height: 250px; height:500px;border-radius:35px;">
+      <div class="container" style="overflow:auto;height:100%;max-width:90%">
+        <table class="table table-hover table-bordered" style="border-style: solid;border-color:blue;border-radius: 35px;width:100% ;margin:auto;" id="plyerTable">
+          <thead>
+            <tr style="width:100%;">
+              <!-- <th scope='row'></th> -->
+              <th style="text-align:center">Players Online</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+  
+          </tbody>
+        </table>
+      </div>
+      
+  
+        <div id="placeMsg"class="row my-5"style="padding:10px ;padding-bottom;min-height:100%;max-height:230px;background-color:lightgray;border-style:dashed;border-color: blue;border-radius: 35px;">
+          <div id="placeMsgChild"class="container" style="overflow:auto;max-width: 90%;min-width: 85%;max-height: 100%">  
+          <table class="table" style="max-width:90%;margin: auto;margin-bottom:50px;" id="msgTable">
+                <thead>
+                  <tr style="width:100%;">
+                    <!-- <th scope='row'></th> -->
+                    <th style="text-align:center">Message Center</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBudy">
+        
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align:center;position: fixed;bottom :50px;">
+              <input id="messageHtml"class="ml-4"type="text" style="width:75% ;border-radius:20px;">
+              <button id="sendMessageBtn">GO!</button>
+            </div>
+          </div>
+
+  </div>
+   
+  </div>
+
+</div>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJJwQTT1bzDxMzFNWgdR4KUwgDDekLogw&callback=initMap">
+  </script>
+</body>
+
+<script src="javascript/mapsApp.js"></script>
+
+</html>
