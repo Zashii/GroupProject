@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Parallax Template - Materialize</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <!-- Pokedx Header with link to the Pokedex emmbeded -->
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container" id="mainheader">
+      <a id="logo-container" href="pokedex.html" class="brand-logo">Pokedex</a>
+
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <div class="row center">
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="background4.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
+
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col m12">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">search</i></h2>
+            <h5 class="center">Find your Pokemon Now!</h5>
+            <div class="input-field col s12">
+              <input placeholder="Enter Pokemon Name or ID Number" id="Searchbox" type="text" class="validate">
+              <label for="Searchbox">Pokemon Name / ID</label>
+            </div>
+            <a href="pokedex.html">
+              <button class="btn waves-effect waves-light" type="submit" name="action", id="Search">Submit
+                <i class="material-icons right">send</i>
+              </button>
+            </a>
+            <p class="light">That's right, we created a Pokedex. Seach your Pokemon of interest here and revisit the Pokedex experience with Pokemon data displayed back you with text to speech characteristics just like in the TV series!</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h5 class="header col s12 light"></h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background5.png" alt="Unsplashed background img 2"></div>
+  </div>
+
+  <div class="container">
+      <div class="section">
+
+          <!--   Icon Section  for app functionality -->
+          <div class="row">
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center brown-text"><i class="material-icons">hearing</i></h2>
+                <h5 class="center">Text-to-Speech</h5>
+    
+                <p class="light">This app will relay the details of the Pokemon data onced searched in audio. To recreate the Pokedex experience. </p>
+              </div>
+            </div>
+    
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center brown-text"><i class="material-icons">group</i></h2>
+                <h5 class="center">User Experience</h5>
+    
+                <p class="light">By utilizing visual elements of the orginal Pokedex, this application aims to provide a user experience that is similar to using the Pokedex its self. </p>
+              </div>
+            </div>
+    
+            <div class="col s12 m4">
+              <div class="icon-block">
+                <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
+                <h5 class="center">Easy to work with</h5>
+    
+                <p class="light">Simply search your Pokemon of interest, click Submit and off you go! </p>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+  </div>
+
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h5 class="header col s12 light"></h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="background5.png" alt="Unsplashed background img 3"></div>
+  </div>
+
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12" id="aboutteam">
+          <h5 class="white-text">About Us</h5>
+          <p class="grey-text text-lighten-4">We are a team of college students who developed this project and would appreciate any feedback or sharing of this application as we continue to develop it!</p>
+
+
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Members</h5>
+          <ul>
+            <li><a class="white-text" href="#!">Justin Smith</a></li>
+            <li><a class="white-text" href="#!">Zashii</a></li>
+            <li><a class="white-text" href="#!">Carlitos</a></li>
+            <li><a class="white-text" href="#!">Elliot Olivieri</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="brown-text text-lighten-3">Justin- Zashii-Elliot-Carlito </a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
+  <!-- Script on click set the value in the Pokemon Search box to local storage and the redirect to Pokedex -->
+  <script>
+    $(document).ready(function(){
+        $("#Search").on("click", function(){
+            localStorage.setItem("name", $("#Searchbox").val());
+        })
+    });
+</script>
+
+  </body>
+</html>
