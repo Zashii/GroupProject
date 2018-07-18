@@ -1,0 +1,140 @@
+@media only screen and (max-width: 991px) {
+    #theIMG {
+      margin-left:10%;
+      margin-top:15%;
+      width:90%;
+   } 
+}
+@media only screen and (max-width: 768px) {
+    #theIMG {
+      margin-left:10%;
+      margin-top:35%;
+      width:90%;
+   } 
+
+   p {
+       font-size: 0.6em;
+   }
+
+   #a1 {
+       width:150%;
+   }
+
+   #t1 {
+       width:150%;
+   }
+
+   #a2 {
+       width:150%;
+   }
+
+   #t2 {
+       width:150%;
+   }
+
+}
+
+@media only screen and (max-width: 575.5px) {
+   #a1 {
+       width:40%;
+       margin: 0px;
+   }
+
+   #t1 {
+       width:40%;
+       margin: 0px;
+   }
+   #a2 {
+       width:40%;
+       margin: 0px;
+   }
+
+   #t2 {
+       width:40%;
+       margin: 0px;
+   }
+
+   #shiny {
+      display:none;
+   } 
+
+}
+
+@media only screen and (max-width: 400px){
+   #genus {
+       font-size: 0.8em;
+   } 
+   #ability1 {
+       font-size: 0.7em;
+   }
+   #ability2 {
+       font-size: 0.7em;
+   }
+   #type1 {
+       font-size: 0.7em;
+   }
+   #type2 {
+       font-size: 0.7em;
+   }
+}
+@media only screen and (max-width: 340px){
+   #genus {
+       font-size: 0.7em;
+   }
+   #ability1 {
+       font-size: 0.6em;
+   }
+   #ability2 {
+       font-size: 0.6em;
+   }
+   #type1 {
+       font-size: 0.6em;
+   }
+   #type2 {
+       font-size: 0.6em;
+   } 
+}
+@media only screen and (max-width: 310px){
+   #genus {
+       font-size: 0.6em;
+   } 
+   #ability1 {
+       font-size: 0.5em;
+   }
+   #ability2 {
+       font-size: 0.5em;
+   }
+   #type1 {
+       font-size: 0.5em;
+   }
+   #type2 {
+       font-size: 0.5em;
+   }
+}
+@media only screen and (max-width: 270px){
+   #genus {
+       font-size: 0.5em;
+   } 
+   #ability1 {
+       font-size: 0.4em;
+   }
+   #ability2 {
+       font-size: 0.4em;
+   }
+   #type1 {
+       font-size: 0.4em;
+   }
+   #type2 {
+       font-size: 0.4em;
+   }
+}
+@media only screen and (max-width: 991px) {
+    #theIMG2 {
+       width: 100%;
+   } 
+}
+@media only screen and (max-width: 691px) {
+    #theIMG2 {
+       width: 100%;
+   } 
+}
